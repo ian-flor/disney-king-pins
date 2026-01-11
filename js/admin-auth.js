@@ -7,8 +7,8 @@
 // Configuration
 // ============================================
 
-const SUPABASE_URL = 'YOUR_SUPABASE_URL';
-const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+const SUPABASE_URL = 'https://qzbtatvwlpkemeziyfms.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_BsY8jGsfQjK6lW_-Bv9j9w_uXJSQxMO';
 
 // Initialize Supabase client
 let supabase = null;
