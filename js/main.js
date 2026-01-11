@@ -12,7 +12,7 @@ const SUPABASE_URL = 'https://qzbtatvwlpkemeziyfms.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_BsY8jGsfQjK6lW_-Bv9j9w_uXJSQxMO';
 
 // Initialize Supabase client
-let supabase = null;
+let supabaseClient = null;
 
 // Check if Supabase is configured
 function isSupabaseConfigured() {
@@ -22,7 +22,7 @@ function isSupabaseConfigured() {
 
 // Initialize Supabase if configured
 if (isSupabaseConfigured() && typeof window.supabase !== 'undefined') {
-    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 }
 
 // ============================================
@@ -191,7 +191,7 @@ function showSuccess(confirmationCode) {
  * Submit agreement to Supabase
  */
 async function submitToSupabase(firstName, lastName, confirmationCode) {
-    if (!supabase) {
+    if (!supabaseClient) {
         console.error('Supabase is not configured');
         return { success: false, error: 'Database not configured' };
     }
@@ -200,7 +200,7 @@ async function submitToSupabase(firstName, lastName, confirmationCode) {
         const ipHash = await getIpHash();
         const userAgent = navigator.userAgent;
 
-        const { data, error } = await supabase
+        const { data, error } = await supabaseClient
             .from('agreements')
             .insert([
                 {
@@ -521,7 +521,7 @@ function initForm() {
         // Submit to database
         let result;
 
-        if (isSupabaseConfigured() && supabase) {
+        if (isSupabaseConfigured() && supabaseClient) {
             result = await submitToSupabase(firstName, lastName, confirmationCode);
         } else {
             // Fallback to localStorage for testing/demo

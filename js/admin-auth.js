@@ -11,11 +11,11 @@ const SUPABASE_URL = 'https://qzbtatvwlpkemeziyfms.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_BsY8jGsfQjK6lW_-Bv9j9w_uXJSQxMO';
 
 // Initialize Supabase client
-let supabase = null;
+let supabaseClient = null;
 
 function initSupabase() {
     if (typeof window.supabase !== 'undefined' && SUPABASE_URL !== 'YOUR_SUPABASE_URL') {
-        supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         return true;
     }
     return false;
@@ -93,12 +93,12 @@ function getAuthError() {
  * Sign in with email and password
  */
 async function signIn(email, password) {
-    if (!supabase) {
+    if (!supabaseClient) {
         return { success: false, error: 'Supabase not configured' };
     }
 
     try {
-        const { data, error } = await supabase.auth.signInWithPassword({
+        const { data, error } = await supabaseClient.auth.signInWithPassword({
             email: email.trim().toLowerCase(),
             password: password
         });
@@ -110,7 +110,7 @@ async function signIn(email, password) {
         // Verify user is in admin_users table
         const isAdmin = await verifyAdminStatus(data.user.id);
         if (!isAdmin) {
-            await supabase.auth.signOut();
+            await supabaseClient.auth.signOut();
             throw new Error('You are not authorized as an admin.');
         }
 
@@ -128,12 +128,12 @@ async function signIn(email, password) {
  * Sign out current user
  */
 async function signOut() {
-    if (!supabase) {
+    if (!supabaseClient) {
         return { success: false, error: 'Supabase not configured' };
     }
 
     try {
-        const { error } = await supabase.auth.signOut();
+        const { error } = await supabaseClient.auth.signOut();
         if (error) throw error;
 
         currentSession = null;
@@ -155,19 +155,19 @@ async function signOut() {
  * Set password for first-time login (invite flow) or recovery
  */
 async function setPassword(newPassword) {
-    if (!supabase) {
+    if (!supabaseClient) {
         return { success: false, error: 'Supabase not configured' };
     }
 
     try {
-        const { data, error } = await supabase.auth.updateUser({
+        const { data, error } = await supabaseClient.auth.updateUser({
             password: newPassword
         });
 
         if (error) throw error;
 
         // Update password_set_at in admin_users
-        await supabase
+        await supabaseClient
             .from('admin_users')
             .update({ password_set_at: new Date().toISOString() })
             .eq('auth_user_id', data.user.id);
@@ -188,12 +188,12 @@ async function setPassword(newPassword) {
  * Request password reset email
  */
 async function requestPasswordReset(email) {
-    if (!supabase) {
+    if (!supabaseClient) {
         return { success: false, error: 'Supabase not configured' };
     }
 
     try {
-        const { error } = await supabase.auth.resetPasswordForEmail(email.trim().toLowerCase(), {
+        const { error } = await supabaseClient.auth.resetPasswordForEmail(email.trim().toLowerCase(), {
             redirectTo: `${window.location.origin}/admin.html`
         });
 
@@ -210,12 +210,12 @@ async function requestPasswordReset(email) {
  * Get current session
  */
 async function getSession() {
-    if (!supabase) {
+    if (!supabaseClient) {
         return null;
     }
 
     try {
-        const { data, error } = await supabase.auth.getSession();
+        const { data, error } = await supabaseClient.auth.getSession();
         if (error) throw error;
 
         if (data.session) {
@@ -239,11 +239,11 @@ async function getSession() {
  * Listen for auth state changes
  */
 function onAuthStateChange(callback) {
-    if (!supabase) {
+    if (!supabaseClient) {
         return { data: { subscription: { unsubscribe: () => {} } } };
     }
 
-    return supabase.auth.onAuthStateChange((event, session) => {
+    return supabaseClient.auth.onAuthStateChange((event, session) => {
         console.log('Auth event:', event);
         currentSession = session;
         callback(event, session);
@@ -258,10 +258,10 @@ function onAuthStateChange(callback) {
  * Verify user is in admin_users table and is active
  */
 async function verifyAdminStatus(authUserId) {
-    if (!supabase) return false;
+    if (!supabaseClient) return false;
 
     try {
-        const { data, error } = await supabase
+        const { data, error } = await supabaseClient
             .from('admin_users')
             .select('id, is_active')
             .eq('auth_user_id', authUserId)
@@ -279,13 +279,13 @@ async function verifyAdminStatus(authUserId) {
  * Get current admin profile
  */
 async function getAdminProfile() {
-    if (!supabase) return null;
+    if (!supabaseClient) return null;
 
     try {
         const session = await getSession();
         if (!session) return null;
 
-        const { data, error } = await supabase
+        const { data, error } = await supabaseClient
             .from('admin_users')
             .select('*')
             .eq('auth_user_id', session.user.id)
@@ -307,7 +307,7 @@ async function updateLastLogin() {
     if (!supabase || !currentSession) return;
 
     try {
-        await supabase
+        await supabaseClient
             .from('admin_users')
             .update({ last_login_at: new Date().toISOString() })
             .eq('auth_user_id', currentSession.user.id);
@@ -365,7 +365,7 @@ const supabaseInitialized = initSupabase();
 // ============================================
 
 window.AdminAuth = {
-    supabase,
+    supabase: supabaseClient,
     signIn,
     signOut,
     setPassword,
