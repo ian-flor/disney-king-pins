@@ -87,6 +87,38 @@ body {
     min-height: 100vh;
 }
 
+/* Admin Link (top-right corner) */
+.admin-link {
+    position: fixed;
+    top: var(--spacing-lg);
+    right: var(--spacing-lg);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: var(--font-size-xs);
+    font-weight: 500;
+    color: var(--text-tertiary);
+    text-decoration: none;
+    background-color: var(--bg-secondary);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-card);
+    transition: all 0.2s ease;
+    z-index: 1000;
+    opacity: 0.7;
+}
+
+.admin-link:hover {
+    color: var(--fb-blue);
+    opacity: 1;
+    box-shadow: var(--shadow-card-hover);
+}
+
+.admin-link svg {
+    width: 14px;
+    height: 14px;
+}
+
 /* Container */
 .container {
     max-width: var(--max-width);

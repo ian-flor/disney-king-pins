@@ -19,9 +19,16 @@
             margin: 0;
         }
 
+        .admin-user-info {
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+            margin-top: var(--spacing-xs);
+        }
+
         .admin-actions {
             display: flex;
             gap: var(--spacing-sm);
+            flex-wrap: wrap;
         }
 
         .btn-secondary {
@@ -43,6 +50,15 @@
 
         .btn-secondary:hover {
             background-color: var(--bg-primary);
+        }
+
+        .btn-logout {
+            color: var(--error-red);
+            border-color: var(--error-red);
+        }
+
+        .btn-logout:hover {
+            background-color: var(--error-bg);
         }
 
         .stats-row {
@@ -71,10 +87,15 @@
             color: var(--text-secondary);
         }
 
+        /* Search with autocomplete */
+        .search-container {
+            position: relative;
+            margin-bottom: var(--spacing-lg);
+        }
+
         .search-bar {
             display: flex;
             gap: var(--spacing-sm);
-            margin-bottom: var(--spacing-lg);
         }
 
         .search-bar input {
@@ -91,6 +112,107 @@
             outline: none;
             border-color: var(--fb-blue);
             box-shadow: 0 0 0 2px rgba(24, 119, 242, 0.2);
+        }
+
+        .autocomplete-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-top: none;
+            border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+            box-shadow: var(--shadow-card-hover);
+            max-height: 300px;
+            overflow-y: auto;
+            z-index: 100;
+            display: none;
+        }
+
+        .autocomplete-dropdown.show {
+            display: block;
+        }
+
+        .autocomplete-item {
+            padding: var(--spacing-md) var(--spacing-lg);
+            cursor: pointer;
+            transition: background-color 0.15s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .autocomplete-item:hover,
+        .autocomplete-item.highlighted {
+            background-color: var(--bg-primary);
+        }
+
+        .autocomplete-item .name {
+            font-weight: 500;
+        }
+
+        .autocomplete-item .code {
+            font-size: var(--font-size-xs);
+            color: var(--text-tertiary);
+            font-family: 'Courier New', monospace;
+        }
+
+        .autocomplete-item mark {
+            background-color: var(--warning-bg);
+            color: inherit;
+            padding: 0 2px;
+            border-radius: 2px;
+        }
+
+        /* Copy member list section */
+        .copy-list-section {
+            background-color: var(--bg-primary);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .copy-list-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .copy-list-header h3 {
+            font-size: var(--font-size-base);
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .copy-list-info {
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+        }
+
+        .btn-copy-list {
+            padding: var(--spacing-sm) var(--spacing-lg);
+            font-size: var(--font-size-sm);
+            font-weight: 600;
+            font-family: inherit;
+            color: var(--text-inverse);
+            background-color: var(--fb-blue);
+            border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+        }
+
+        .btn-copy-list:hover {
+            background-color: var(--fb-blue-hover);
+        }
+
+        .btn-copy-list.copied {
+            background-color: var(--success-green);
         }
 
         .table-wrapper {
@@ -179,15 +301,22 @@
             cursor: not-allowed;
         }
 
-        /* Login screen */
+        /* Login screens */
         .login-card {
             max-width: 400px;
-            margin: 100px auto;
+            margin: 80px auto;
             padding: var(--spacing-2xl);
         }
 
         .login-card h2 {
             text-align: center;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .login-card .form-description {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: var(--font-size-sm);
             margin-bottom: var(--spacing-xl);
         }
 
@@ -195,11 +324,103 @@
             margin-bottom: var(--spacing-lg);
         }
 
+        .login-card .form-group label {
+            display: block;
+            font-size: var(--font-size-sm);
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .login-card .form-group input {
+            width: 100%;
+            padding: var(--spacing-md) var(--spacing-lg);
+            font-size: var(--font-size-base);
+            font-family: inherit;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .login-card .form-group input:focus {
+            outline: none;
+            border-color: var(--fb-blue);
+            box-shadow: 0 0 0 2px rgba(24, 119, 242, 0.2);
+        }
+
+        .password-hint {
+            display: block;
+            margin-top: var(--spacing-xs);
+            font-size: var(--font-size-xs);
+            color: var(--text-tertiary);
+        }
+
+        .error-message {
+            font-size: var(--font-size-sm);
+            color: var(--error-red);
+            background-color: var(--error-bg);
+            padding: var(--spacing-md);
+            border-radius: var(--radius-sm);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .success-message {
+            font-size: var(--font-size-sm);
+            color: var(--success-green);
+            background-color: var(--success-bg);
+            padding: var(--spacing-md);
+            border-radius: var(--radius-sm);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .login-links {
+            margin-top: var(--spacing-lg);
+            text-align: center;
+            font-size: var(--font-size-sm);
+        }
+
+        .login-links a {
+            color: var(--fb-blue);
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .login-links a:hover {
+            text-decoration: underline;
+        }
+
+        .demo-notice {
+            background-color: var(--warning-bg);
+            color: var(--text-primary);
+            padding: var(--spacing-md);
+            border-radius: var(--radius-sm);
+            margin-top: var(--spacing-lg);
+            font-size: var(--font-size-sm);
+            text-align: center;
+        }
+
+        .demo-notice code {
+            background-color: rgba(0,0,0,0.1);
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+
         /* Responsive */
         @media (max-width: 600px) {
             .admin-header {
                 flex-direction: column;
                 align-items: flex-start;
+            }
+
+            .admin-actions {
+                width: 100%;
+            }
+
+            .admin-actions .btn-secondary {
+                flex: 1;
+                justify-content: center;
             }
 
             .stats-row {
@@ -210,25 +431,92 @@
                 padding: var(--spacing-sm);
                 font-size: var(--font-size-xs);
             }
+
+            .login-card {
+                margin: 40px auto;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Login Screen (shown first) -->
+        <!-- Login Screen -->
         <div class="card login-card" id="login-card">
             <h2>Admin Login</h2>
             <form id="login-form">
                 <div class="form-group">
-                    <label for="adminPassword">Password</label>
-                    <input type="password" id="adminPassword" name="adminPassword" required placeholder="Enter admin password">
+                    <label for="adminEmail">Email</label>
+                    <input type="email" id="adminEmail" name="adminEmail" required
+                           placeholder="Enter your email" autocomplete="email">
                 </div>
+                <div class="form-group">
+                    <label for="adminPassword">Password</label>
+                    <input type="password" id="adminPassword" name="adminPassword" required
+                           placeholder="Enter your password" autocomplete="current-password">
+                </div>
+                <div id="login-error" class="error-message" style="display: none;"></div>
                 <button type="submit" class="submit-btn">
                     <span class="btn-text">Login</span>
+                    <span class="btn-spinner" style="display: none;">
+                        <svg class="spinner" width="20" height="20" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" fill="none" stroke-dasharray="32" stroke-linecap="round"/>
+                        </svg>
+                    </span>
                 </button>
             </form>
-            <p style="margin-top: var(--spacing-lg); text-align: center; font-size: var(--font-size-sm); color: var(--text-tertiary);">
-                Default password for demo: <code>dkp2024</code>
+            <p class="login-links">
+                <a id="showForgotPassword">Forgot password?</a>
+            </p>
+            <div id="demo-notice" class="demo-notice" style="display: none;">
+                <strong>Demo Mode:</strong> Supabase not configured.<br>
+                Use password: <code>dkp2024</code>
+            </div>
+        </div>
+
+        <!-- Set Password Screen (for invite/recovery flow) -->
+        <div class="card login-card" id="set-password-card" style="display: none;">
+            <h2>Set Your Password</h2>
+            <p class="form-description">Welcome! Please set a secure password for your admin account.</p>
+            <form id="set-password-form">
+                <div class="form-group">
+                    <label for="newPassword">New Password</label>
+                    <input type="password" id="newPassword" name="newPassword" required
+                           placeholder="Enter new password" autocomplete="new-password"
+                           minlength="8">
+                    <small class="password-hint">
+                        At least 8 characters with uppercase, lowercase, and number
+                    </small>
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" required
+                           placeholder="Confirm new password" autocomplete="new-password">
+                </div>
+                <div id="set-password-error" class="error-message" style="display: none;"></div>
+                <button type="submit" class="submit-btn">
+                    <span class="btn-text">Set Password & Continue</span>
+                </button>
+            </form>
+        </div>
+
+        <!-- Forgot Password Screen -->
+        <div class="card login-card" id="forgot-password-card" style="display: none;">
+            <h2>Reset Password</h2>
+            <p class="form-description">Enter your email to receive a password reset link.</p>
+            <form id="forgot-password-form">
+                <div class="form-group">
+                    <label for="resetEmail">Email</label>
+                    <input type="email" id="resetEmail" name="resetEmail" required
+                           placeholder="Enter your email" autocomplete="email">
+                </div>
+                <div id="forgot-password-error" class="error-message" style="display: none;"></div>
+                <div id="forgot-password-success" class="success-message" style="display: none;"></div>
+                <button type="submit" class="submit-btn">
+                    <span class="btn-text">Send Reset Link</span>
+                </button>
+            </form>
+            <p class="login-links">
+                <a id="backToLogin">Back to login</a>
             </p>
         </div>
 
@@ -239,7 +527,7 @@
                 <div class="admin-header">
                     <div>
                         <h1>Admin Dashboard</h1>
-                        <p class="subtitle">View and manage rule agreements</p>
+                        <p class="admin-user-info">Logged in as <span id="admin-email">admin</span></p>
                     </div>
                     <div class="admin-actions">
                         <button class="btn-secondary" id="exportBtn">
@@ -249,6 +537,14 @@
                                 <line x1="12" y1="15" x2="12" y2="3"></line>
                             </svg>
                             Export CSV
+                        </button>
+                        <button class="btn-secondary btn-logout" id="logoutBtn">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                                <polyline points="16 17 21 12 16 7"></polyline>
+                                <line x1="21" y1="12" x2="9" y2="12"></line>
+                            </svg>
+                            Logout
                         </button>
                         <a href="index.html" class="btn-secondary">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -284,8 +580,34 @@
 
             <!-- Data Table Card -->
             <div class="card" style="padding: var(--spacing-xl);">
-                <div class="search-bar">
-                    <input type="text" id="searchInput" placeholder="Search by name or confirmation code...">
+                <!-- Search with Autocomplete -->
+                <div class="search-container">
+                    <div class="search-bar">
+                        <input type="text" id="searchInput" placeholder="Search by name or confirmation code..." autocomplete="off">
+                    </div>
+                    <div class="autocomplete-dropdown" id="autocompleteDropdown"></div>
+                </div>
+
+                <!-- Copy Member List Section -->
+                <div class="copy-list-section">
+                    <div class="copy-list-header">
+                        <div>
+                            <h3>Copy Member List</h3>
+                            <p class="copy-list-info">
+                                <span id="copyListCount">0</span> members <span id="copyListFilter">(showing all)</span>
+                            </p>
+                        </div>
+                        <button class="btn-copy-list" id="copyListBtn">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" id="copyListIcon">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                            </svg>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" id="copyListCheck" style="display: none;">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                            <span id="copyListText">Copy Names</span>
+                        </button>
+                    </div>
                 </div>
 
                 <div class="table-wrapper">
@@ -328,6 +650,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/admin-auth.js"></script>
     <script src="js/admin.js"></script>
 </body>
 </html>
